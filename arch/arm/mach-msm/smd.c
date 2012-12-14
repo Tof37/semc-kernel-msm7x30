@@ -1,4 +1,4 @@
-/* arch/arm/mach-msm/smd.c
+ /* arch/arm/mach-msm/smd.c
  *
  * Copyright (C) 2007 Google, Inc.
  * Copyright (c) 2008-2010, Code Aurora Forum. All rights reserved.
@@ -1587,6 +1587,30 @@ static int __init msm_smd_probe(struct platform_device *pdev)
 	smd_alloc_loopback_channel();
 
 	return 0;
+}
+
+void __init smsm_wait_for_modem(void)
+{
+	uint32_t *smsm = NULL;
+	unsigned long flags;
+
+	printk(KERN_INFO "Waiting for Modem...\n");
+	for (;;) {
+		spin_lock_irqsave(&smem_lock, flags);
+		if (smsm == NULL) {
+			smsm = smem_alloc(ID_SHARED_STATE,
+				SMSM_NUM_ENTRIES * sizeof(uint32_t));
+		} else {
+			if ((smsm[SMSM_MODEM_STATE] & SMSM_OSENTERED) != 0) {
+				spin_unlock_irqrestore(&smem_lock, flags);
+				break;
+			}
+		}
+		spin_unlock_irqrestore(&smem_lock, flags);
+		schedule();
+	}
+
+	return;
 }
 
 static struct platform_driver msm_smd_driver = {

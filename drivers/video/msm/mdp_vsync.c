@@ -491,6 +491,7 @@ uint32 mdp_get_lcd_line_counter(struct msm_fb_data_type *mfd)
 
 	return lcd_line;
 }
+#ifdef CONFIG_FB_MSM_MDP40
 
 void mdp_vsync_config_update(struct msm_panel_info *pinfo)
 {
@@ -512,3 +513,5 @@ void mdp_vsync_config_update(struct msm_panel_info *pinfo)
 	MDP_OUTP(MDP_BASE + MDP_SYNC_CFG_1, cfg);
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
 }
+
+#endif

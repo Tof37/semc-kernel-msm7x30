@@ -57,5 +57,11 @@ struct akm8973_platform_data {
 	int intr;
 };
 
+struct akm8973_i2c_platform_data {
+	int (*gpio_config)(int enable);
+	int (*xres)(void);
+};
+
+
 #endif
 
