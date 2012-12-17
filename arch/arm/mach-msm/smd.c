@@ -1,4 +1,4 @@
- /* arch/arm/mach-msm/smd.c
+/* arch/arm/mach-msm/smd.c
  *
  * Copyright (C) 2007 Google, Inc.
  * Copyright (c) 2008-2010, Code Aurora Forum. All rights reserved.

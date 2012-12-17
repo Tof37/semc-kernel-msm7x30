@@ -359,8 +359,12 @@ static int max17040_get_supplier_data(struct device *dev, void *data)
 			max17040_update_rcomp(this);
 		}
 
-		if (!pst->get_property(pst, POWER_SUPPLY_PROP_TECHNOLOGY, &ret))
+		if (!pst->get_property(pst, POWER_SUPPLY_PROP_TECHNOLOGY, &ret)){
+#ifdef CONFIG_MACH_ES209RA
+			ret.intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
+#endif
 			this->tech = ret.intval;
+		}
 	}
 
 	return 0;
@@ -429,6 +433,12 @@ static int max17040_bat_get_property(struct power_supply *bat_ps,
 
 		val->intval = this->curr_soc;
 		break;
+#ifdef CONFIG_MACH_ES209RA
+	case POWER_SUPPLY_PROP_TECHNOLOGY:
+		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
+		break;
+#endif
+
 	default:
 		return -EINVAL;
 	}
@@ -448,6 +458,9 @@ static void max17040_bat_external_power_changed(struct power_supply *bat_ps)
 
 static enum power_supply_property max17040_bat_main_props[] = {
 	POWER_SUPPLY_PROP_STATUS,
+#ifdef CONFIG_MACH_ES209RA
+	POWER_SUPPLY_PROP_TECHNOLOGY,
+#endif
 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
 	POWER_SUPPLY_PROP_VOLTAGE_MAX,
 	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
