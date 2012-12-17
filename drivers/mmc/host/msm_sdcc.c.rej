@@ -1,0 +1,38 @@
+--- drivers/mmc/host/msm_sdcc.c	2011-07-15 08:11:17.000000000 +0200
++++ home/benjamin/android/KTG-Kernel_es209ra/kernel-2.6.32.9/drivers/mmc/host/msm_sdcc.c	2012-11-05 14:57:37.909203294 +0100
+@@ -1764,11 +1721,18 @@
+ 
+ 	if (mmc) {
+ 		struct msmsdcc_host *host = mmc_priv(mmc);
+-
+-		if (mmc->card && mmc->card->type != MMC_TYPE_SDIO)
++		if (mmc->last_suspend_error)
++			return 0;
+ 			rc = mmc_suspend_host(mmc, PMSG_SUSPEND);
+-		else if (host->plat->status_irq)
++		if (!rc) {
++			host->mmc->caps &= ~MMC_CAP_NEEDS_POLL;
++#ifdef CONFIG_HAS_EARLYSUSPEND
++			host->polling_enabled = 0;
++#endif
++			cancel_delayed_work(&mmc->detect);
++			if (host->plat->status_irq)
+ 			disable_irq(host->plat->status_irq);
++		}
+ 
+ 		if (!rc) {
+ 			writel(0, host->base + MMCIMASK0);
+@@ -1816,9 +1793,11 @@
+ 
+ 		spin_unlock_irqrestore(&host->lock, flags);
+ 
+-		if (mmc->card && mmc->card->type != MMC_TYPE_SDIO)
++		if (host->plat->sdiowakeup_irq)
++			disable_irq(host->plat->sdiowakeup_irq);
++
+ 			mmc_resume_host(mmc);
+-		else if (host->plat->status_irq)
++		if (host->plat->status_irq)
+ 			enable_irq(host->plat->status_irq);
+ 	}
+ 	return 0;

@@ -129,6 +129,7 @@ again:
 	writel(PCOM_CMD_IDLE, base + APP_COMMAND);
 
 	spin_unlock_irqrestore(&proc_comm_lock, flags);
+
 	return ret;
 }
 EXPORT_SYMBOL(msm_proc_comm);

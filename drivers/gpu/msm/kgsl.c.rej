@@ -1,0 +1,36 @@
+--- drivers/gpu/msm/kgsl.c	2011-07-15 08:11:17.000000000 +0200
++++ home/benjamin/android/KTG-Kernel_es209ra/kernel-2.6.32.9/drivers/gpu/msm/kgsl.c	2012-11-05 14:57:33.337221515 +0100
+@@ -15,6 +15,7 @@
+  * 02110-1301, USA.
+  *
+  */
++#include <linux/kobject.h>
+ #include <linux/platform_device.h>
+ #include <linux/fb.h>
+ #include <linux/file.h>
+@@ -281,7 +282,8 @@
+ 			if (kgsl_driver.clk_freq[KGSL_AXI_HIGH_3D])
+ 				pm_qos_update_requirement(
+ 					PM_QOS_SYSTEM_BUS_FREQ, "kgsl_3d",
+-					kgsl_driver.clk_freq[KGSL_AXI_HIGH_3D]);
++					PM_QOS_DEFAULT_VALUE);
++					//kgsl_driver.clk_freq[KGSL_AXI_HIGH_3D]);
+ 			if (kgsl_driver.clk_freq[KGSL_3D_MAX_FREQ])
+ 				clk_set_rate(kgsl_driver.yamato_grp_src_clk,
+ 					kgsl_driver.clk_freq[KGSL_3D_MAX_FREQ]);
+@@ -665,6 +667,7 @@
+ 	mutex_unlock(&kgsl_driver.mutex);
+ 	if (result != 0)
+ 		kgsl_release(inodep, filep);
++
+ 	return result;
+ }
+ 
+@@ -1999,7 +2002,6 @@
+ 		kgsl_driver_cleanup();
+ 	else
+ 		result = kgsl_register_dev(kgsl_driver.num_devs);
+-
+ 	if (!result)
+ 		KGSL_DRV_DBG("platform probe successful, numdevs=%d\n",
+ 						kgsl_driver.num_devs);

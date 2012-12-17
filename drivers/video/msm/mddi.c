@@ -356,7 +356,11 @@ static int mddi_probe(struct platform_device *pdev)
 	else
 		mfd->fb_imgType = MDP_RGB_565;
 
+#ifdef CONFIG_MACH_ES209RA
+	clk_rate = mfd->panel_info.clk_rate;
+#else
 	clk_rate = mfd->panel_info.clk_max;
+#endif
 	if (mddi_pdata &&
 	    mddi_pdata->mddi_sel_clk &&
 	    mddi_pdata->mddi_sel_clk(&clk_rate))
