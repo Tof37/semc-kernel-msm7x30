@@ -2522,7 +2522,7 @@ static int msmfb_overlay_refresh(struct fb_info *info, unsigned long *argp)
 	return mdp4_overlay_refresh(info, ndx);
 }
 #endif
-
+#if 0
 static int msmfb_mixer_info(struct fb_info *info, unsigned long *argp)
 {
 	int	ret, cnt;
@@ -2544,6 +2544,7 @@ static int msmfb_mixer_info(struct fb_info *info, unsigned long *argp)
 	return cnt;
 }
 
+#endif//0
 DECLARE_MUTEX(msm_fb_ioctl_ppp_sem);
 DEFINE_MUTEX(msm_fb_ioctl_lut_sem);
 DEFINE_MUTEX(msm_fb_ioctl_hist_sem);

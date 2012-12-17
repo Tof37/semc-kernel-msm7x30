@@ -44,6 +44,10 @@
 #include "mdp4.h"
 #endif
 
+#ifdef CONFIG_FB_MSM_MDDI_TMD_NT35580
+#include "mddi_tmd_nt35580.h"
+#endif
+
 uint32 mdp4_extn_disp;
 static struct clk *mdp_clk;
 static struct clk *mdp_pclk;
